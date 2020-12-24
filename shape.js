@@ -1,5 +1,13 @@
 'use strict';
 
+function inherits(Child, Parent) {
+    var F = function () {};
+    F.prototype = Parent.prototype;
+    Child.prototype = new F();
+    Child.prototype.constructor = Child;
+    
+}
+
 function Shape() {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
@@ -9,7 +17,7 @@ function Shape() {
 
 Shape.radius = 7;
 
-Shape.point = function point(x, y)
+function point(x, y)
 {
     this.x = x;
     this.y = y;
@@ -24,16 +32,16 @@ Shape.point = function point(x, y)
     // 1  : showing up
 };
 
-Shape.point.prototype.r = 7;
+point.prototype.r = 7;
 
-Shape.point.prototype.render = function (context) {
+point.prototype.render = function (context) {
     context.beginPath();
     context.arc( this.currentX, this.currentY, this.r, 0, Math.PI * 2);
     context.closePath();
     context.fill();
 };
 
-Shape.point.prototype.update = function (ratio) {
+point.prototype.update = function (ratio) {
     this.currentX = ratio * (this.targetX - this.x) + this.x;
     this.currentY = ratio * (this.targetY - this.y) + this.y;
     if (this.state === 0) {
@@ -45,10 +53,50 @@ Shape.point.prototype.update = function (ratio) {
     }
 };
 
-Shape.point.prototype.shake = function () {
+point.prototype.shake = function () {
     this.currentX = this.targetX + Math.random() * 2;
     this.currentY = this.targetY + Math.random() * 2;
 };
+
+function heart(x, y) {
+    point.call(this, x, y)
+    this.points = []
+    this.length = 0
+    this.lightness = 80
+    for (let i = 0; i < 2*Math.PI; i += 2*Math.PI/30) {
+        let x = 16 * Math.pow(Math.sin(i), 3)
+        let y = 13 * Math.cos(i) - 5 * Math.cos(2 * i) - 2 * Math.cos(3 * i) - Math.cos(4 * i)
+        this.points.push([x, y])
+                    
+    }
+    this.length = this.points.length
+}
+
+inherits(heart, point)
+
+heart.prototype.get = function(i) {
+    return this.points[i]
+}
+
+heart.prototype.render = function (context) {
+    context.save()
+    context.beginPath()
+    context.translate(this.currentX,this.currentY)
+    context.fillStyle = 'hsla(0 ,100%,'+this.lightness+'%,0.6)'
+    context.lineWidtn = 2
+    context.lineCap = 'round'
+    context.scale(this.r * 0.1,this.r * 0.1)
+    context.moveTo(this.get(0)[0],-this.get(0)[1])
+    for(let i = 1 ;i < this.length ; i++){
+        context.lineTo(this.get(i)[0],-this.get(i)[1])
+    }
+    context.closePath()
+    context.fill()
+    context.restore()
+}
+
+
+Shape.point = heart
 
 Shape.prototype.resize = function () {
     var canvas = this.canvas;
@@ -70,6 +118,7 @@ Shape.prototype.genDotMap = function () {
     var dotGap = this.dotGap;
     for (var y = 0; y < canvas.height; y += dotGap) {
         for (var x = 0; x< canvas.width; x += dotGap) {
+            // 4 means RGBA
             if (data[y * canvas.width * 4 + x * 4] != 0) {
                 dotc.push(new Shape.point(x, y));
             }
@@ -89,7 +138,6 @@ Shape.prototype.text = function(str) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillText(str, canvas.width / 2, canvas.height / 2);
 };
-
 
 Shape.Engine = function (canvas) {
     canvas.height = window.innerHeight;
