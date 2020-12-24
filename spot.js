@@ -10,7 +10,7 @@
     
     function start() {
         document.getElementById('go').removeEventListener('click', start);
-        promise.then(() => engine.toText('欧'))
+        progressbar.init(() => promise.then(() => engine.toText('欧'))
         .then(() => engine.shake())
         .then(() => engine.toText('O'))
         .then(() => engine.shake())
@@ -19,7 +19,7 @@
         .then(() => engine.toText('E'))
         .then(() => engine.shake())
         .then(() => engine.clear())
-        .then(() => document.getElementById('go').addEventListener('click', start));
+        .then(() => document.getElementById('go').addEventListener('click', start)));
     }
     start();
 })();
