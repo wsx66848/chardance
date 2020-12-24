@@ -5,11 +5,12 @@
 
     var engine = new Shape.Engine(canvas);
     var promise = new Promise((resolve) => { resolve(); });
+    var mycanvas = new Canvas(canvas)
     
-    document.getElementById('go').addEventListener('click', start);
+    document.getElementById('canvas').addEventListener('canvas', start);
     
     function start() {
-        document.getElementById('go').removeEventListener('click', start);
+        document.getElementById('canvas').removeEventListener('click', start);
         progressbar.init(() => promise.then(() => engine.toText('欧'))
         .then(() => engine.shake())
         .then(() => engine.toText('思'))
@@ -27,7 +28,18 @@
         .then(() => engine.toText('I LOVE U'))
         .then(() => engine.shake())
         .then(() => engine.clear())
-        .then(() => document.getElementById('go').addEventListener('click', start)));
+        .then(() => {
+            let ctx = canvas.getContext('2d')
+            let img = new Image()
+            img.src = "jierui.jpg"
+            img.onload = () => {
+                let sx = canvas.width / 2 - img.width / 2
+                let sy = canvas.height / 2 - img.height / 2
+                ctx.drawImage(img, sx, sy, img.width, img.height)
+                mycanvas.drawHearts()
+            }
+        })
+        .then(() => document.getElementById('canvas').addEventListener('click', start)));
     }
     start();
 })();
