@@ -11,7 +11,8 @@
     
     function start() {
         document.getElementById('canvas').removeEventListener('click', start);
-        progressbar.init(() => promise.then(() => engine.toText('欧'))
+        promise.then(() => progressbar.init())
+        .then(() => engine.toText('欧'))
         .then(() => engine.shake())
         .then(() => engine.toText('思'))
         .then(() => engine.shake())
@@ -27,6 +28,8 @@
         .then(() => engine.shake())
         .then(() => engine.toText('I LOVE U'))
         .then(() => engine.shake())
+        .then(() => engine.toText('merry christmas'))
+        .then(() => engine.shake())
         .then(() => engine.clear())
         .then(() => {
             let ctx = canvas.getContext('2d')
@@ -39,7 +42,7 @@
                 mycanvas.drawHearts()
             }
         })
-        .then(() => document.getElementById('canvas').addEventListener('click', start)));
+        .then(() => document.getElementById('canvas').addEventListener('click', start));
     }
     start();
 })();
