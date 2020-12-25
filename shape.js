@@ -62,7 +62,7 @@ function heart(x, y) {
     point.call(this, x, y)
     this.points = []
     this.length = 0
-    this.lightness = 80
+    this.lightness = 60
     for (let i = 0; i < 2*Math.PI; i += 2*Math.PI/30) {
         let x = 16 * Math.pow(Math.sin(i), 3)
         let y = 13 * Math.cos(i) - 5 * Math.cos(2 * i) - 2 * Math.cos(3 * i) - Math.cos(4 * i)
@@ -82,7 +82,7 @@ heart.prototype.render = function (context) {
     context.save()
     context.beginPath()
     context.translate(this.currentX,this.currentY)
-    context.fillStyle = 'hsla(0 ,100%,'+this.lightness+'%,0.6)'
+    context.fillStyle = 'hsla(0 ,100%,'+this.lightness+'%,0.9)'
     context.lineWidtn = 2
     context.lineCap = 'round'
     context.scale(this.r * 0.1,this.r * 0.1)
