@@ -107,12 +107,14 @@ Canvas.prototype={
                 
     },
     drawHearts:function(){
-                    let i = this.length
-        while(i--){
-                            this.hearts[i].draw()
-                        
-        }
-                
+        var promise = new Promise((resolve) => {
+            let i = this.length
+            while(i--){
+                this.hearts[i].draw()
+            }
+            resolve()
+        })
+        return promise
     }
         
 }

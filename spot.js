@@ -31,18 +31,14 @@
         .then(() => engine.toText('merry christmas'))
         .then(() => engine.shake())
         .then(() => engine.clear())
+        .then(() => mycanvas.drawHearts())
         .then(() => {
-            let ctx = canvas.getContext('2d')
-            let img = new Image()
-            img.src = "jierui.jpg"
-            img.onload = () => {
-                let sx = canvas.width / 2 - img.width / 2
-                let sy = canvas.height / 2 - img.height / 2
-                ctx.drawImage(img, sx, sy, img.width, img.height)
-                mycanvas.drawHearts()
+            let promises = []
+            for(let i = 1; i <= 40; i++) {
+                promises.push(new ShowPic(i, canvas).show())
             }
+            Promise.all(promises).then(() => document.getElementById('canvas').addEventListener('click', start));
         })
-        .then(() => document.getElementById('canvas').addEventListener('click', start));
     }
     start();
 })();
