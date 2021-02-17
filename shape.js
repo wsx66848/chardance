@@ -1,17 +1,10 @@
 'use strict';
+import inherits from './common/inherits.js'
 
-function inherits(Child, Parent) {
-    var F = function () {};
-    F.prototype = Parent.prototype;
-    Child.prototype = new F();
-    Child.prototype.constructor = Child;
-    
-}
-
-function Shape() {
+function Shape(canvas) {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
-    this.fontSize = 100;
+    this.fontSize = 120;
     this.dotGap = 15;
 }
 
@@ -82,7 +75,8 @@ heart.prototype.render = function (context) {
     context.save()
     context.beginPath()
     context.translate(this.currentX,this.currentY)
-    context.fillStyle = 'hsla(0 ,100%,'+this.lightness+'%,0.9)'
+    // context.fillStyle = 'hsla(0 ,90.323%,'+this.lightness+'%,0.9)'
+    context.fillStyle = 'hsl(0 ,90.323%,75.686%)'
     context.lineWidtn = 2
     context.lineCap = 'round'
     context.scale(this.r * 0.1,this.r * 0.1)
@@ -132,7 +126,7 @@ Shape.prototype.text = function(str) {
     var canvas = this.canvas;
     var fontSize = this.fontSize;
     context.font = 'bold 30px sans-serif';
-    var size = Math.min(0.22 * fontSize / context.measureText(str).width * canvas.width, 0.6 * canvas.height);
+    var size = Math.min(0.22 * fontSize / context.measureText(str).width * canvas.width, 0.8 * canvas.height);
     context.font = 'bold ' + Math.floor(size) + 'px sans-serif';
     console.log(size);
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -147,7 +141,7 @@ Shape.Engine = function (canvas) {
 
     this.context = canvas.getContext("2d");
     this.context.fillStyle = 'white';
-    this.shapeFactory = new Shape();
+    this.shapeFactory = new Shape(canvas);
     this.points = [];
     this.shapeFactory.resize();
     
@@ -295,3 +289,5 @@ Shape.Engine.prototype._toShape = function (targets) {
     });
     return promise;
 }
+
+export default Shape.Engine

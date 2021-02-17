@@ -1,9 +1,13 @@
-(function() {
-    'use strict';
+'use strict';
+import Engine from './shape.js'
+import progressbar from './progress.js'
+import Canvas from './hearts.js'
+
+$(function() {
 
     var canvas = document.getElementById('canvas');
 
-    var engine = new Shape.Engine(canvas);
+    var engine = new Engine(canvas);
     var promise = new Promise((resolve) => { resolve(); });
     var mycanvas = new Canvas(canvas)
     
@@ -32,6 +36,7 @@
         .then(() => engine.shake())
         .then(() => engine.clear())
         .then(() => mycanvas.drawHearts())
+        /*
         .then(() => {
             let promises = []
             for(let i = 1; i <= 40; i++) {
@@ -39,6 +44,7 @@
             }
             Promise.all(promises).then(() => document.getElementById('canvas').addEventListener('click', start));
         })
+        */
     }
     start();
-})();
+});

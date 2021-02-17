@@ -52,7 +52,6 @@ body {
 
 /* 设置进度条动画 */
 #fill {
-    animation: move 6s;
     height: 100%;
     text-align: center;
     background-color: #6caf00;
@@ -61,15 +60,5 @@ body {
 
 #fill-text {
     display: inline-block;
-    vertical-aligh: middle;
-}
-
-/* 实现元素宽度过度的动画效果 */
-@keyframes move {
-    0% {
-       width: 0;
-    }
-    100% {
-       width: 100%;
-    }
+    vertical-align: middle;
 }

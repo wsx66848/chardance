@@ -119,3 +119,5 @@ Canvas.prototype={
         
 }
 
+export default Canvas
+
