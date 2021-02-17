@@ -40,14 +40,14 @@ body {
 
 #tip {
     position: relative;
-    left: 40%;
+    left: 30%;
     top: 20%;
     font-size: 1em;
     color: rgb(18,22,49)
 }
 
-/* 设置进度条动画 */
 #fill {
+    width: 0%;
     height: 100%;
     text-align: center;
     background-color: #6caf00;
@@ -59,4 +59,79 @@ body {
     right: 50%;
     vertical-align: middle;
     float: right;
+} 
+
+.button {
+    background: #3498db;
+    width: 12%;
+    height: 6%;
+    padding: 4px 0;
+    
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 3px;
+}
+
+.button p {
+    font-family: 'Roboto'; 
+    text-align: center;
+    text-transform: uppercase;
+    color: #FFF;
+    user-select: none;
+    position: relative;
+}
+
+#positive-text {
+    top: -8%;
+}
+
+#negtive-text {
+    position: relative;
+    top: -78%;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.button:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 10%;
+    border-radius: 50%;
+    background-color: #f1c40f;
+    opacity: 0.4;
+    bottom: -30px;
+}
+
+#buttonarea {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.positive {
+    left: 30%;
+    float: left;
+}
+
+.positive:focus, .positive:hover {
+    background: #66b1ff;
+    border-color: #66b1ff;
+    color: #fff;
+}
+
+.negtive {
+    background: #e6a23c;
+    left: 70%;
+}
+
+.negtive:focus, .negtive:hover {
+    background: #ebb563;
+    border-color: #ebb563;
+    color: #fff
 }
