@@ -1,12 +1,21 @@
+<!DOCTYPE html>
 <html>
     <head>
-        <title>spot light</title>
+        <title>多多的内心世界</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+    </head>
     </head>
     <body>
+        <div id="wrapper">
+            <div id="progressbar">
+                <span id="fill-text"></span>
+                <div id="fill"></div>
+                <div id="tip"></div>
+            </div>
+        </div>
         <canvas id="canvas"></canvas>
-        <button id="go">click</button>
     </body>
-    <script src="shape.js"></script>
-    <script src="spot.js"></script>
+    <script type="module" src="./spot.js" charset="UTF-8"></script>
 </html>

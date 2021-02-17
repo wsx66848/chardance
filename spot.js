@@ -1,16 +1,28 @@
-(function() {
-    'use strict';
+'use strict';
+import Engine from './shape.js'
+import progressbar from './progress.js'
+import Hearts from './hearts.js'
 
-    var canvas = document.getElementById('canvas');
+$(function() {
 
-    var engine = new Shape.Engine(canvas);
-    var promise = new Promise((resolve) => { resolve(); });
+    let canvas = document.getElementById('canvas');
+
+    let engine = new Engine(canvas);
+    let promise = new Promise((resolve) => { resolve(); });
+    let hearts = new Hearts(canvas)
     
-    document.getElementById('go').addEventListener('click', start);
+    document.getElementById('canvas').addEventListener('canvas', start);
     
     function start() {
-        document.getElementById('go').removeEventListener('click', start);
-        promise.then(() => engine.toText('L'))
+        document.getElementById('canvas').removeEventListener('click', start);
+        promise.then(() => progressbar.init())
+        .then(() => engine.toText('欧'))
+        .then(() => engine.shake())
+        .then(() => engine.toText('思'))
+        .then(() => engine.shake())
+        .then(() => engine.toText('婕'))
+        .then(() => engine.shake())
+        .then(() => engine.toText('L'))
         .then(() => engine.shake())
         .then(() => engine.toText('O'))
         .then(() => engine.shake())
@@ -18,7 +30,21 @@
         .then(() => engine.shake())
         .then(() => engine.toText('E'))
         .then(() => engine.shake())
+        .then(() => engine.toText('I LOVE U'))
+        .then(() => engine.shake())
+        .then(() => engine.toText('merry christmas'))
+        .then(() => engine.shake())
         .then(() => engine.clear())
-        .then(() => document.getElementById('go').addEventListener('click', start));
+        .then(() => hearts.drawHearts())
+        /*
+        .then(() => {
+            let promises = []
+            for(let i = 1; i <= 40; i++) {
+                promises.push(new ShowPic(i, canvas).show())
+            }
+            Promise.all(promises).then(() => document.getElementById('canvas').addEventListener('click', start));
+        })
+        */
     }
-})();
+    start();
+});

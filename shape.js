@@ -1,54 +1,19 @@
 'use strict';
+import {heart} from './point.js'
+import {hsla} from './common.js'
 
 function Shape() {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
-    this.fontSize = 100;
-    this.dotGap = 15;
+    this.fontSize = 120;
+    this.dotGap = 33;
 }
 
 Shape.radius = 7;
 
-Shape.point = function point(x, y)
-{
-    this.x = x;
-    this.y = y;
-    this.targetX = x;
-    this.targetY = y;
-    this.currentX = x;
-    this.currentY = y;
-    this.state = 0;
-    this.r = Shape.radius;
-    // -1 : dispearing
-    // 0  : keeping
-    // 1  : showing up
-};
+Shape.point = heart
 
-Shape.point.prototype.r = 7;
-
-Shape.point.prototype.render = function (context) {
-    context.beginPath();
-    context.arc( this.currentX, this.currentY, this.r, 0, Math.PI * 2);
-    context.closePath();
-    context.fill();
-};
-
-Shape.point.prototype.update = function (ratio) {
-    this.currentX = ratio * (this.targetX - this.x) + this.x;
-    this.currentY = ratio * (this.targetY - this.y) + this.y;
-    if (this.state === 0) {
-
-    } else if (this.state === 1) {
-        this.r = ratio * Shape.radius;
-    } else {
-        this.r = (1 - ratio) * Shape.radius;
-    }
-};
-
-Shape.point.prototype.shake = function () {
-    this.currentX = this.targetX + Math.random() * 2;
-    this.currentY = this.targetY + Math.random() * 2;
-};
+Shape.fillStyle = new hsla(0, 90.323, 75.686,1)
 
 Shape.prototype.resize = function () {
     var canvas = this.canvas;
@@ -70,8 +35,9 @@ Shape.prototype.genDotMap = function () {
     var dotGap = this.dotGap;
     for (var y = 0; y < canvas.height; y += dotGap) {
         for (var x = 0; x< canvas.width; x += dotGap) {
+            // 4 means RGBA
             if (data[y * canvas.width * 4 + x * 4] != 0) {
-                dotc.push(new Shape.point(x, y));
+                dotc.push(new Shape.point(x, y, Shape.radius, Shape.fillStyle));
             }
         }
     }
@@ -83,13 +49,12 @@ Shape.prototype.text = function(str) {
     var canvas = this.canvas;
     var fontSize = this.fontSize;
     context.font = 'bold 30px sans-serif';
-    var size = Math.min(0.22 * fontSize / context.measureText(str).width * canvas.width, 0.6 * canvas.height);
+    var size = Math.min(0.22 * fontSize / context.measureText(str).width * canvas.width, 0.8 * canvas.height);
     context.font = 'bold ' + Math.floor(size) + 'px sans-serif';
     console.log(size);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillText(str, canvas.width / 2, canvas.height / 2);
 };
-
 
 Shape.Engine = function (canvas) {
     canvas.height = window.innerHeight;
@@ -247,3 +212,5 @@ Shape.Engine.prototype._toShape = function (targets) {
     });
     return promise;
 }
+
+export default Shape.Engine
