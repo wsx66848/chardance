@@ -1,15 +1,20 @@
 'use strict';
 import {heart} from './point.js'
-import {hsla} from './common.js'
+import {hsla, rgba} from './common.js'
 
 function Shape() {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.fontSize = 120;
-    this.dotGap = 33;
+    // for font
+    this.dotGapFont = 33;
+    // for pic
+    this.dotGapPic = 8
 }
 
-Shape.radius = 7;
+Shape.radiusFont = 7;
+
+Shape.radiusPic = 1.2;
 
 Shape.point = heart
 
@@ -32,17 +37,40 @@ Shape.prototype.genDotMap = function () {
     var context = this.context;
     var data = context.getImageData(0, 0, canvas.width, canvas.height).data;
     var dotc = [];
-    var dotGap = this.dotGap;
+    var dotGap = this.dotGapFont;
     for (var y = 0; y < canvas.height; y += dotGap) {
         for (var x = 0; x< canvas.width; x += dotGap) {
             // 4 means RGBA
             if (data[y * canvas.width * 4 + x * 4] != 0) {
-                dotc.push(new Shape.point(x, y, Shape.radius, Shape.fillStyle));
+                dotc.push(new Shape.point(x, y, Shape.radiusFont, Shape.fillStyle));
             }
         }
     }
     return dotc;
 };
+
+Shape.prototype.genPicDotMap = function() {
+    var canvas = this.canvas;
+    var context = this.context;
+    var data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    var dotc = [];
+    var dotGap = this.dotGapPic;
+    for (var y = 0; y < canvas.height; y += dotGap) {
+        for (var x = 0; x< canvas.width; x += dotGap) {
+            // 4 means RGBA
+            let start = y * canvas.width * 4 + x * 4
+            let r = data[start]
+            let g = data[start + 1]
+            let b =  data[start + 2]
+            let a = data[start + 3]
+            if (r != 0 || g != 0 || b != 0 || a != 0) {
+                let fillStyle = new rgba(r, g, b, a)
+                dotc.push(new Shape.point(x, y, Shape.radiusPic, fillStyle));
+            }
+        }
+    }
+    return dotc;
+}
 
 Shape.prototype.text = function(str) {
     var context = this.context;
@@ -55,6 +83,25 @@ Shape.prototype.text = function(str) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillText(str, canvas.width / 2, canvas.height / 2);
 };
+
+Shape.prototype.picture = function (img) {
+    let context = this.context;
+    let canvas = this.canvas;
+    let width = img.width;
+    let height = img.height;
+    if(width > canvas.width * 0.7) {
+        width = canvas.width * 0.7
+        height = width * (img.height / img.width)
+    }
+    if(height > canvas.height * 0.7) {
+        height = canvas.height * 0.7
+        width = height * (img.width / img.height)
+    }
+    let sx = (canvas.width - width) / 2
+    let sy = (canvas.height - height) / 2
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(img, sx, sy, width, height)
+}
 
 Shape.Engine = function (canvas) {
     canvas.height = window.innerHeight;
@@ -131,6 +178,17 @@ Shape.Engine.prototype.shake = function (time) {
     return promise;
 };
 
+Shape.Engine.prototype.toPicture = function(path) {
+    let promise = new Promise((resolve) => {
+        let img = new Image()
+        img.src = path
+        img.onload = () => {
+            this.shapeFactory.picture(img)
+            resolve(this.shapeFactory.genPicDotMap())
+        }
+    })
+    return promise.then((points) => this._toShape(points))
+}
 
 Shape.Engine.prototype.genText = function (text) {
     this.shapeFactory.text(text);
