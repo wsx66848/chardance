@@ -223,6 +223,7 @@ Shape.Engine.prototype._toShape = function (targets) {
         for (let i = 0; i < len; i++) {
             points[i].targetX = targets[i].x;
             points[i].targetY = targets[i].y;
+            points[i].fillStyle = targets[i].fillStyle
         }
 
         if (points.length > targets.length) {
