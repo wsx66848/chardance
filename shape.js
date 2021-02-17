@@ -1,96 +1,19 @@
 'use strict';
-import inherits from './common/inherits.js'
+import {heart} from './point.js'
+import {hsla} from './common.js'
 
 function Shape(canvas) {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.fontSize = 120;
-    this.dotGap = 15;
+    this.dotGap = 33;
 }
 
 Shape.radius = 7;
 
-function point(x, y)
-{
-    this.x = x;
-    this.y = y;
-    this.targetX = x;
-    this.targetY = y;
-    this.currentX = x;
-    this.currentY = y;
-    this.state = 0;
-    this.r = Shape.radius;
-    // -1 : dispearing
-    // 0  : keeping
-    // 1  : showing up
-};
-
-point.prototype.r = 7;
-
-point.prototype.render = function (context) {
-    context.beginPath();
-    context.arc( this.currentX, this.currentY, this.r, 0, Math.PI * 2);
-    context.closePath();
-    context.fill();
-};
-
-point.prototype.update = function (ratio) {
-    this.currentX = ratio * (this.targetX - this.x) + this.x;
-    this.currentY = ratio * (this.targetY - this.y) + this.y;
-    if (this.state === 0) {
-
-    } else if (this.state === 1) {
-        this.r = ratio * Shape.radius;
-    } else {
-        this.r = (1 - ratio) * Shape.radius;
-    }
-};
-
-point.prototype.shake = function () {
-    this.currentX = this.targetX + Math.random() * 2;
-    this.currentY = this.targetY + Math.random() * 2;
-};
-
-function heart(x, y) {
-    point.call(this, x, y)
-    this.points = []
-    this.length = 0
-    this.lightness = 60
-    for (let i = 0; i < 2*Math.PI; i += 2*Math.PI/30) {
-        let x = 16 * Math.pow(Math.sin(i), 3)
-        let y = 13 * Math.cos(i) - 5 * Math.cos(2 * i) - 2 * Math.cos(3 * i) - Math.cos(4 * i)
-        this.points.push([x, y])
-                    
-    }
-    this.length = this.points.length
-}
-
-inherits(heart, point)
-
-heart.prototype.get = function(i) {
-    return this.points[i]
-}
-
-heart.prototype.render = function (context) {
-    context.save()
-    context.beginPath()
-    context.translate(this.currentX,this.currentY)
-    // context.fillStyle = 'hsla(0 ,90.323%,'+this.lightness+'%,0.9)'
-    context.fillStyle = 'hsl(0 ,90.323%,75.686%)'
-    context.lineWidtn = 2
-    context.lineCap = 'round'
-    context.scale(this.r * 0.1,this.r * 0.1)
-    context.moveTo(this.get(0)[0],-this.get(0)[1])
-    for(let i = 1 ;i < this.length ; i++){
-        context.lineTo(this.get(i)[0],-this.get(i)[1])
-    }
-    context.closePath()
-    context.fill()
-    context.restore()
-}
-
-
 Shape.point = heart
+
+Shape.fillStyle = new hsla(0, 90.323, 75.686,1)
 
 Shape.prototype.resize = function () {
     var canvas = this.canvas;
@@ -114,7 +37,7 @@ Shape.prototype.genDotMap = function () {
         for (var x = 0; x< canvas.width; x += dotGap) {
             // 4 means RGBA
             if (data[y * canvas.width * 4 + x * 4] != 0) {
-                dotc.push(new Shape.point(x, y));
+                dotc.push(new Shape.point(x, y, Shape.radius, Shape.fillStyle));
             }
         }
     }
