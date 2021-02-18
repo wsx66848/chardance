@@ -12,9 +12,6 @@ Text.prototype.handle = function(text) {
             if(count == text.length) {
                 clearInterval(interval)
                 interval = null
-                setTimeout(() => {
-                    this.clear()
-                }, 2000)
                 resolve()
             }
             curText += text.charAt(count)
@@ -25,7 +22,11 @@ Text.prototype.handle = function(text) {
 }
 
 Text.prototype.clear = function() {
-    this.charText.text("")
+    let promise = new Promise((resolve) => {
+        this.charText.text("")
+        resolve()
+    })
+    return promise
 }
 
 export default Text
